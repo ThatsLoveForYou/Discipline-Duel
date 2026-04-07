@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Discipline Duel: Slay the Excuse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hp-bar { transition: width 0.5s ease-in-out; }
+        .shake { animation: shake 0.5s; }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div id="game-container" class="max-w-md w-full bg-slate-800 rounded-xl shadow-2xl p-6 border border-slate-700">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-xl font-bold text-blue-400">TLFY Games</h1>
+                <p class="text-xs text-slate-400">The Discipline Duel</p>
+            </div>
+            <div class="text-right">
+                <p class="text-sm">Score: <span id="score" class="font-mono text-green-400">0</span></p>
+                <p class="text-xs text-slate-400">Best: <span id="high-score">0</span></p>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <div class="flex justify-between text-xs mb-1">
+                <span>Resilience HP</span>
+                <span id="hp-text">100/100</span>
+            </div>
+            <div class="w-full bg-slate-700 h-4 rounded-full overflow-hidden">
+                <div id="hp-bar" class="hp-bar bg-red-500 h-full" style="width: 100%"></div>
+            </div>
+        </div>
+
+        <div id="excuse-card" class="bg-slate-700 p-6 rounded-lg mb-6 text-center border-l-4 border-red-500">
+            <p class="text-sm uppercase tracking-widest text-slate-400 mb-2">The Excuse:</p>
+            <h2 id="current-excuse" class="text-xl font-semibold italic text-white">"I'll start tomorrow."</h2>
+        </div>
+
+        <div id="options-container" class="grid grid-cols-1 gap-3">
+            </div>
+    </div>
+
+    <div id="modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-blue-500 p-8 rounded-2xl text-center max-w-sm">
+            <h2 class="text-3xl font-bold text-blue-400 mb-2">Duel Ended</h2>
+            <p id="final-stats" class="text-slate-300 mb-6"></p>
+            <button onclick="resetGame()" class="bg-blue-600 hover:bg-blue-500 px-8 py-3 rounded-full font-bold transition">RETRY</button>
+        </div>
+    </div>
+
+    <script>
+        const gameData = [
+            { excuse: "I'm too tired to work on my app.", strike: "Action creates energy. Start with 5 minutes." },
+            { excuse: "I don't have enough time.", strike: "I have the same 24 hours as everyone else. Prioritize." },
+            { excuse: "I'll start when I feel inspired.", strike: "Discipline beats inspiration every single time." },
+            { excuse: "It's too hard to learn this code.", strike: "Consistency is the mother of mastery. Break it down." }
+        ];
+
+        let hp = 100;
+        let score = 0;
+        let highScore = localStorage.getItem('duelHighScore') || 0;
+
+        const hpBar = document.getElementById('hp-bar');
+        const hpText = document.getElementById('hp-text');
+        const scoreEl = document.getElementById('score');
+        const highScoreEl = document.getElementById('high-score');
+        const excuseEl = document.getElementById('current-excuse');
+        const optionsEl = document.getElementById('options-container');
+        const modal = document.getElementById('modal');
+
+        highScoreEl.innerText = highScore;
+
+        function loadRound() {
+            const correctPair = gameData[Math.floor(Math.random() * gameData.length)];
+            excuseEl.innerText = `"${correctPair.excuse}"`;
+            
+            // Create options (1 correct, 1 random wrong one)
+            let options = [correctPair.strike];
+            while(options.length < 2) {
+                let randomStrike = gameData[Math.floor(Math.random() * gameData.length)].strike;
+                if(!options.includes(randomStrike)) options.push(randomStrike);
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            optionsEl.innerHTML = '';
+            options.forEach(text => {
+                const btn = document.createElement('button');
+                btn.className = "bg-slate-600 hover:bg-blue-900 text-left p-4 rounded-lg border border-slate-500 transition-all active:scale-95";
+                btn.innerText = text;
+                btn.onclick = () => handleChoice(text === correctPair.strike);
+                optionsEl.appendChild(btn);
+            });
+        }
+
+        function handleChoice(isCorrect) {
+            if (isCorrect) {
+                score += 10;
+                scoreEl.innerText = score;
+                loadRound();
+            } else {
+                hp -= 25;
+                document.getElementById('game-container').classList.add('shake');
+                setTimeout(() => document.getElementById('game-container').classList.remove('shake'), 500);
+                updateHP();
+            }
+        }
+
+        function updateHP() {
+            hpBar.style.width = hp + '%';
+            hpText.innerText = `${hp}/100`;
+            if (hp <= 0) endGame();
+        }
+
+        function endGame() {
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('duelHighScore', highScore);
+            }
+            document.getElementById('final-stats').innerText = `You slayed excuses and earned a Future Focus Score of ${score}!`;
+            modal.classList.remove('hidden');
+        }
+
+        function resetGame() {
+            hp = 100;
+            score = 0;
+            scoreEl.innerText = score;
+            highScoreEl.innerText = highScore;
+            updateHP();
+            modal.classList.add('hidden');
+            loadRound();
+        }
+
+        loadRound();
+    </script>
+</body>
+</html>
+const gameData = [
+    { 
+        excuse: "I'll start when the timing is perfect.", 
+        strike: "Perfect timing is a myth. The best time to start was yesterday; the second best is now." 
+    },
+    { 
+        excuse: "I don't have the right resources yet.", 
+        strike: "Use what you have, where you are. Resourcefulness is more important than resources." 
+    },
+    { 
+        excuse: "What if I fail and look like a fool?", 
+        strike: "Failure is just data. The only real 'fool' is the one who never tries." 
+    },
+    { 
+        excuse: "I’m just not 'talented' enough for this.", 
+        strike: "Hard work outshines talent when talent doesn't work hard. Keep grinding." 
+    },
+    { 
+        excuse: "I've already messed up today, I'll try again Monday.", 
+        strike: "A bad moment doesn't have to mean a bad day. Reset your focus right now." 
+    },
+    { 
+        excuse: "It’s taking too long to see results.", 
+        strike: "The biggest changes happen beneath the surface first. Trust the process." 
+    },
+    { 
+        excuse: "I'm too overwhelmed by the big picture.", 
+        strike: "You don't have to climb the whole mountain today. Just take the next step." 
+    }
+];
+    { 
+        excuse: "I don't understand this error message, I'll stop for now.", 
+        strike: "Every error is a lesson. Debugging is where the real learning happens." 
+    },
+    { 
+        excuse: "There's too much new tech to learn at once.", 
+        strike: "One logic block at a time. Master the foundation, and the rest follows." 
+    },
+    { 
+        excuse: "My code isn't as clean as the pros yet.", 
+        strike: "Done is better than perfect. Refactor later; build it now." 
+    },
+    { 
+        excuse: "I'll never remember all these tags and functions.", 
+        strike: "You don't need to memorize; you need to understand. Google is a tool, not a crutch." 
+    },
+    { 
+        excuse: "The deployment failed, maybe this isn't for me.", 
+        strike: "A failed push isn't a failed project. Check the logs and try again." 
+    }
+const gameData = [
+    // General Mindset
+    { excuse: "I'll start when the timing is perfect.", strike: "Perfect timing is a myth. The second best time to start is now." },
+    { excuse: "What if I fail and look like a fool?", strike: "Failure is just data. The only real 'fool' is the one who never tries." },
+    { excuse: "I've already messed up today, I'll try again Monday.", strike: "A bad moment doesn't have to mean a bad day. Reset focus now." },
+    
+    // Tech & Coding Specifics
+    { excuse: "I don't understand this error message, I'll stop for now.", strike: "Every error is a lesson. Debugging is where the real learning happens." },
+    { excuse: "My code isn't as clean as the pros yet.", strike: "Done is better than perfect. Refactor later; build it now." },
+    { excuse: "I'll never remember all these tags and functions.", strike: "You don't need to memorize; you need to understand. Use your tools." },
+    { excuse: "The deployment failed, maybe this isn't for me.", strike: "A failed push isn't a failed project. Check the logs and try again." }
+];
