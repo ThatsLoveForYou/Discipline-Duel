@@ -59,11 +59,17 @@
     </div>
 
     <script>
+        // ALL your excuses and strikes are now inside this one list
         const gameData = [
+            { excuse: "I'll start when the timing is perfect.", strike: "Perfect timing is a myth. The second best time to start is now." },
+            { excuse: "What if I fail and look like a fool?", strike: "Failure is just data. The only real 'fool' is the one who never tries." },
+            { excuse: "I've already messed up today, I'll try again Monday.", strike: "A bad moment doesn't have to mean a bad day. Reset focus now." },
+            { excuse: "I don't understand this error message, I'll stop for now.", strike: "Every error is a lesson. Debugging is where the real learning happens." },
+            { excuse: "My code isn't as clean as the pros yet.", strike: "Done is better than perfect. Refactor later; build it now." },
+            { excuse: "I'll never remember all these tags and functions.", strike: "You don't need to memorize; you need to understand. Use your tools." },
+            { excuse: "The deployment failed, maybe this isn't for me.", strike: "A failed push isn't a failed project. Check the logs and try again." },
             { excuse: "I'm too tired to work on my app.", strike: "Action creates energy. Start with 5 minutes." },
-            { excuse: "I don't have enough time.", strike: "I have the same 24 hours as everyone else. Prioritize." },
-            { excuse: "I'll start when I feel inspired.", strike: "Discipline beats inspiration every single time." },
-            { excuse: "It's too hard to learn this code.", strike: "Consistency is the mother of mastery. Break it down." }
+            { excuse: "I don't have enough time.", strike: "I have the same 24 hours as everyone else. Prioritize." }
         ];
 
         let hp = 100;
@@ -84,7 +90,6 @@
             const correctPair = gameData[Math.floor(Math.random() * gameData.length)];
             excuseEl.innerText = `"${correctPair.excuse}"`;
             
-            // Create options (1 correct, 1 random wrong one)
             let options = [correctPair.strike];
             while(options.length < 2) {
                 let randomStrike = gameData[Math.floor(Math.random() * gameData.length)].strike;
@@ -117,7 +122,7 @@
 
         function updateHP() {
             hpBar.style.width = hp + '%';
-            hpText.innerText = `${hp}/100`;
+            hpText.innerText = hp + '/100';
             if (hp <= 0) endGame();
         }
 
@@ -144,65 +149,4 @@
     </script>
 </body>
 </html>
-const gameData = [
-    { 
-        excuse: "I'll start when the timing is perfect.", 
-        strike: "Perfect timing is a myth. The best time to start was yesterday; the second best is now." 
-    },
-    { 
-        excuse: "I don't have the right resources yet.", 
-        strike: "Use what you have, where you are. Resourcefulness is more important than resources." 
-    },
-    { 
-        excuse: "What if I fail and look like a fool?", 
-        strike: "Failure is just data. The only real 'fool' is the one who never tries." 
-    },
-    { 
-        excuse: "I’m just not 'talented' enough for this.", 
-        strike: "Hard work outshines talent when talent doesn't work hard. Keep grinding." 
-    },
-    { 
-        excuse: "I've already messed up today, I'll try again Monday.", 
-        strike: "A bad moment doesn't have to mean a bad day. Reset your focus right now." 
-    },
-    { 
-        excuse: "It’s taking too long to see results.", 
-        strike: "The biggest changes happen beneath the surface first. Trust the process." 
-    },
-    { 
-        excuse: "I'm too overwhelmed by the big picture.", 
-        strike: "You don't have to climb the whole mountain today. Just take the next step." 
-    }
-];
-    { 
-        excuse: "I don't understand this error message, I'll stop for now.", 
-        strike: "Every error is a lesson. Debugging is where the real learning happens." 
-    },
-    { 
-        excuse: "There's too much new tech to learn at once.", 
-        strike: "One logic block at a time. Master the foundation, and the rest follows." 
-    },
-    { 
-        excuse: "My code isn't as clean as the pros yet.", 
-        strike: "Done is better than perfect. Refactor later; build it now." 
-    },
-    { 
-        excuse: "I'll never remember all these tags and functions.", 
-        strike: "You don't need to memorize; you need to understand. Google is a tool, not a crutch." 
-    },
-    { 
-        excuse: "The deployment failed, maybe this isn't for me.", 
-        strike: "A failed push isn't a failed project. Check the logs and try again." 
-    }
-const gameData = [
-    // General Mindset
-    { excuse: "I'll start when the timing is perfect.", strike: "Perfect timing is a myth. The second best time to start is now." },
-    { excuse: "What if I fail and look like a fool?", strike: "Failure is just data. The only real 'fool' is the one who never tries." },
-    { excuse: "I've already messed up today, I'll try again Monday.", strike: "A bad moment doesn't have to mean a bad day. Reset focus now." },
-    
-    // Tech & Coding Specifics
-    { excuse: "I don't understand this error message, I'll stop for now.", strike: "Every error is a lesson. Debugging is where the real learning happens." },
-    { excuse: "My code isn't as clean as the pros yet.", strike: "Done is better than perfect. Refactor later; build it now." },
-    { excuse: "I'll never remember all these tags and functions.", strike: "You don't need to memorize; you need to understand. Use your tools." },
-    { excuse: "The deployment failed, maybe this isn't for me.", strike: "A failed push isn't a failed project. Check the logs and try again." }
-];
+
